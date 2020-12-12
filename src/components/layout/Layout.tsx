@@ -1,5 +1,11 @@
 import Head from 'next/head'
 import React from 'react'
+import { styled } from 'twin.macro'
+
+const Container = styled.div`
+  display: grid;
+  justify-content: center;
+`
 
 interface LayoutProps {
   children: React.ReactNode
@@ -7,13 +13,13 @@ interface LayoutProps {
 }
 const Layout: React.FC<LayoutProps> = ({ children, title }: LayoutProps): React.ReactElement => {
   return (
-    <div>
+    <Container>
       <Head>
         <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>{children}</main>
-    </div>
+    </Container>
   )
 }
 
