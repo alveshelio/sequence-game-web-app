@@ -1,15 +1,8 @@
 import React from 'react'
-import tw, { TwStyle } from 'twin.macro'
+import tw, { styled } from 'twin.macro'
 
-interface InputProps {
-  hasHover: boolean
-}
+const StyledInput = styled.input(() => [`color: purple;`, tw`border rounded hover:border-black`])
 
-const stylesInput = ({ hasHover }: InputProps): TwStyle[] => [
-  tw`border`, // Add base styles first
-  hasHover && tw`hover:border-black`, // Then conditional styles
-]
-
-const Input = (props: InputProps): React.ReactElement => <input css={stylesInput(props)} />
+const Input = (): React.ReactElement => <StyledInput />
 
 export default Input
