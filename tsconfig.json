@@ -21,7 +21,10 @@
     "paths": {
       "@components/*": ["components/*"],
       "@uiKit/*": ["uiKit/*"],
-      "@types/*": ["types/*"]
+      "@appTypes/*": ["types/*"],
+      "@context/*": ["context/*"],
+      "@actions/*": ["context/actions/*"],
+      "@reducers/*": ["context/reducers/*"],
     }
 },
   "include": [
