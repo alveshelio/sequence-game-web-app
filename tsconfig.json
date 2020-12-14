@@ -20,7 +20,7 @@
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["components/*"],
-      "@uiKit/*": ["uiKit/*"],
+      "@uiKit/*": ["uiKit/index.tsx"],
       "@appTypes/*": ["types/*"],
       "@context/*": ["context/*"],
       "@actions/*": ["context/actions/*"],

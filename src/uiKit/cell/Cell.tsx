@@ -1,6 +1,6 @@
 import { Position } from '@appTypes/types'
 import { useGameState } from '@context/gameContext'
-import Chip from '@uiKit/chip/Chip'
+import { Chip } from 'uiKit'
 import Image from 'next/image'
 import React from 'react'
 import { styled } from 'twin.macro'
@@ -14,23 +14,27 @@ const CellContainer = styled.div`
   position: relative;
 `
 
-const Cell: React.FC<CellProps> = ({ card, position }: CellProps): React.ReactElement => {
-  const { cardsPlayed } = useGameState()
-  const matchCardPlayed = cardsPlayed.find((c) => c.card === card && c.position === position)
+export const Cell: React.FC<CellProps> = React.memo(
+  ({ card, position }: CellProps): React.ReactElement => {
+    const { cardsPlayed } = useGameState()
+    const matchCardPlayed = cardsPlayed.find(
+      (c) => c.card === card && c.position[0] === position[0] && c.position[1] === position[1]
+    )
 
-  return (
-    <CellContainer>
-      <Image
-        className="absolute top-0 left-0"
-        src={`/deck/${card}.png`}
-        alt={card}
-        layout="responsive"
-        width={450}
-        height={630}
-      />
-      {matchCardPlayed && <Chip color={matchCardPlayed.team} />}
-    </CellContainer>
-  )
-}
+    return (
+      <CellContainer>
+        <Image
+          className="absolute top-0 left-0"
+          src={`/deck/${card}.png`}
+          alt={card}
+          layout="responsive"
+          width={450}
+          height={630}
+        />
+        {matchCardPlayed && <Chip team={matchCardPlayed.team} />}
+      </CellContainer>
+    )
+  }
+)
 
-export default React.memo(Cell)
+Cell.displayName = 'Cell'

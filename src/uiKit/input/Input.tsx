@@ -1,8 +1,6 @@
 import React from 'react'
-import tw, { styled } from 'twin.macro'
+import { Input as RKInput } from 'reakit'
 
-const StyledInput = styled.input(() => [`color: purple;`, tw`border rounded hover:border-black`])
-
-const Input = (): React.ReactElement => <StyledInput />
-
-export default Input
+export const Input: React.FC = () => {
+  return <RKInput className="border" />
+}
