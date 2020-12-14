@@ -1,21 +1,23 @@
+import { Position } from '@appTypes/types'
+import { useGameState } from '@context/gameContext'
+import Chip from '@uiKit/chip/Chip'
 import Image from 'next/image'
 import React from 'react'
 import { styled } from 'twin.macro'
 
-import { Team } from '../../types/types'
-import Chip from '../chip/Chip'
-
 interface CellProps {
   card: string
-  hasChip: boolean
-  team: Team
+  position: Position
 }
 
 const CellContainer = styled.div`
   position: relative;
 `
 
-const Cell: React.FC<CellProps> = ({ card, hasChip, team }: CellProps): React.ReactElement => {
+const Cell: React.FC<CellProps> = ({ card, position }: CellProps): React.ReactElement => {
+  const { cardsPlayed } = useGameState()
+  const matchCardPlayed = cardsPlayed.find((c) => c.card === card && c.position === position)
+
   return (
     <CellContainer>
       <Image
@@ -26,9 +28,9 @@ const Cell: React.FC<CellProps> = ({ card, hasChip, team }: CellProps): React.Re
         width={450}
         height={630}
       />
-      {hasChip && <Chip color={team} />}
+      {matchCardPlayed && <Chip color={matchCardPlayed.team} />}
     </CellContainer>
   )
 }
 
-export default Cell
+export default React.memo(Cell)

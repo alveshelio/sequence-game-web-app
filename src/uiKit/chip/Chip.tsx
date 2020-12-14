@@ -1,8 +1,9 @@
 import React from 'react'
 import { styled } from 'twin.macro'
+import { Team } from '@appTypes/types'
 
 interface ChipProps {
-  color: string
+  color: Team
 }
 
 const StyledChip = styled.div<ChipProps>`
