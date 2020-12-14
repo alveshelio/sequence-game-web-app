@@ -1,9 +1,9 @@
 import React from 'react'
-import { styled } from 'twin.macro'
+import tw, { styled } from 'twin.macro'
 import { Team } from '@appTypes/types'
 
 interface ChipProps {
-  color: Team
+  team: Team
 }
 
 const StyledChip = styled.div<ChipProps>`
@@ -12,9 +12,18 @@ const StyledChip = styled.div<ChipProps>`
   left: calc(50% - 20px);
   width: 40px;
   height: 40px;
-  background-color: ${({ color }) => color};
+  ${({ team }) => {
+    switch (team.teamColor) {
+      case 'Green':
+        return tw`bg-green-500`
+      case 'Blue':
+        return tw`bg-blue-500`
+      case 'Red':
+        return tw`bg-red-500`
+    }
+  }};
   border-radius: 100%;
-  box-shadow: 2px 5px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 3px 0 rgba(0, 0, 0, 0.4);
   z-index: 20;
 
   &:after {
@@ -27,12 +36,10 @@ const StyledChip = styled.div<ChipProps>`
     left: 50%;
     transform: translatex(-50%) translatey(-50%);
     border-radius: 100%;
-    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
   }
 `
 
-const Chip: React.FC<ChipProps> = ({ color }: ChipProps): React.ReactElement => {
-  return <StyledChip color={color} />
+export const Chip: React.FC<ChipProps> = ({ team }: ChipProps): React.ReactElement => {
+  return <StyledChip team={team} />
 }
-
-export default Chip
