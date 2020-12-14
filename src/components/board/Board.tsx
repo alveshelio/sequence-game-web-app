@@ -1,7 +1,7 @@
+import { Position } from '@appTypes/types'
+import Cell from '@uiKit/cell/Cell'
 import React from 'react'
 import { styled } from 'twin.macro'
-import { Team } from '../../types/types'
-import Cell from '../../uiKit/cell/Cell'
 import { board } from './data/gameData'
 
 const BoardContainer = styled.div`
@@ -13,19 +13,21 @@ const BoardContainer = styled.div`
   width: 75vh;
 `
 
-const teams: Team[] = ['Green', 'Red', 'Blue']
-
 const Board = (): React.ReactElement => {
+  let x = 0
+  let y = 0
   return (
     <BoardContainer>
-      {board.flat().map((card, cardIndex) => (
-        <Cell
-          key={cardIndex}
-          card={card}
-          hasChip={Math.random() < 0.5}
-          team={teams[Math.floor(Math.random() * 2)]}
-        />
-      ))}
+      {board.flat().map((card, cardIndex) => {
+        const position: Position = [y, x]
+        x++
+        if (x > 9) {
+          x = 0
+          y++
+        }
+
+        return <Cell key={cardIndex} card={card} position={position} />
+      })}
     </BoardContainer>
   )
 }
