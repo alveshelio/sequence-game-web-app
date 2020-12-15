@@ -28,8 +28,8 @@ export const Cell: React.FC<CellProps> = React.memo(
           src={`/deck/${card}.png`}
           alt={card}
           layout="responsive"
-          width={450}
-          height={630}
+          width={120}
+          height={85}
         />
         {matchCardPlayed && <Chip team={matchCardPlayed.team} />}
       </CellContainer>
