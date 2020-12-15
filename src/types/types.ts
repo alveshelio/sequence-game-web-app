@@ -16,13 +16,20 @@ interface Player {
 }
 
 export interface Team {
+  teamId: string
   players: Player[]
   teamColor: TeamColor
+}
+
+export interface TeamPlayer {
+  teamId: string
+  player: string
 }
 
 export interface GameState {
   cardsPlayed: CardPlayed[]
   teams: Team[]
+  error: string | null
 }
 
 export type Dispatch = (action: GameActions) => void

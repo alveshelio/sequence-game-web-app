@@ -9,6 +9,7 @@ const GameDispatchContext = React.createContext<Dispatch | undefined>(undefined)
 const initialState: GameState = {
   cardsPlayed: [],
   teams: [],
+  error: null,
 }
 
 const GameProvider: React.FC<GameContextProps> = ({ children }: GameContextProps) => {

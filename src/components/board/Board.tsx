@@ -10,12 +10,13 @@ const BoardContainer = styled.div`
   grid-template-rows: repeat(10, 1fr);
   gap: 5px;
   height: 100vh;
-  width: 75vh;
+  width: 1200px;
 `
 
 const Board = (): React.ReactElement => {
   let x = 0
   let y = 0
+
   return (
     <BoardContainer>
       {board.flat().map((card, cardIndex) => {
