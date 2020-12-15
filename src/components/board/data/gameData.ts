@@ -1,3 +1,5 @@
+import { rotateMatrix } from '@components/board/utils/gameUtils'
+
 export const CardSymbols = {
   SPADES: 'spades',
   CLUBS: 'clubs',
@@ -22,7 +24,7 @@ export const Cards = {
   JOKER: 'joker',
 }
 
-export const board = [
+const originalBoard = [
   [
     `${Cards.JOKER}`,
     `${Cards.TWO}-${CardSymbols.SPADES}`,
@@ -144,3 +146,5 @@ export const board = [
     `${Cards.JOKER}`,
   ],
 ]
+
+export const board = rotateMatrix(originalBoard)
