@@ -1,5 +1,4 @@
 import React from 'react'
-import { GameActions } from '@actions/gameActions'
 
 export type TeamColor = 'Red' | 'Green' | 'Blue'
 export type Position = [number, number]
@@ -31,8 +30,6 @@ export interface GameState {
   teams: Team[]
   error: string | null
 }
-
-export type Dispatch = (action: GameActions) => void
 
 export interface GameContextProps {
   children: React.ReactNode

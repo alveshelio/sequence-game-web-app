@@ -1,7 +1,5 @@
-import { GameActionTypes } from '@actions/gameActionTypes'
 import { Team, TeamColor } from '@appTypes/types'
 import Players from '@components/player/Players'
-import { useGameDispatch } from '@context/gameContext'
 import React from 'react'
 import tw, { styled } from 'twin.macro'
 import { Button } from 'uiKit'
@@ -22,16 +20,17 @@ const Container = styled.div(({ color }: ContainerProps) => [
 ])
 
 const TeamItem: React.FC<TeamProps> = ({ team }: TeamProps) => {
-  const dispatch = useGameDispatch()
-
-  const removeTeam = (teamId: string): void => {
-    dispatch({ type: GameActionTypes.REMOVE_TEAM, payload: teamId })
-  }
   return (
     <Container color={team.teamColor}>
       <h2 className="text-xl">Team: {team.teamColor}</h2>
       <div className="mb-4">
-        <Button onClick={() => removeTeam(team.teamId)}>Remove Team</Button>
+        <Button
+          onClick={() => {
+            console.warn('remove team')
+          }}
+        >
+          Remove Team
+        </Button>
       </div>
       <Players teamId={team.teamId} />
     </Container>

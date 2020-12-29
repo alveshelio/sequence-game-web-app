@@ -1,5 +1,4 @@
 import { Position } from '@appTypes/types'
-import { useGameState } from '@context/gameContext'
 import { Chip } from 'uiKit'
 import Image from 'next/image'
 import React from 'react'
@@ -16,7 +15,8 @@ const CellContainer = styled.div`
 
 export const Cell: React.FC<CellProps> = React.memo(
   ({ card, position }: CellProps): React.ReactElement => {
-    const { cardsPlayed } = useGameState()
+    // const { cardsPlayed } = useGameState()
+    const cardsPlayed = []
     const matchCardPlayed = cardsPlayed.find(
       (c) => c.card === card && c.position[0] === position[0] && c.position[1] === position[1]
     )
