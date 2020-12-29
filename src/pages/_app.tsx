@@ -1,14 +1,20 @@
 import React from 'react'
+import { NhostAuthProvider } from '@nhost/react-auth'
+import { NhostApolloProvider } from '@nhost/react-apollo'
+
+import { auth } from 'libs/nhost'
 import { GlobalStyles } from 'twin.macro'
 
 import 'styles/globals.css'
 
 function MyApp({ Component, pageProps }): React.ReactElement {
   return (
-    <div>
-      <GlobalStyles />
-      <Component {...pageProps} />
-    </div>
+    <NhostAuthProvider auth={auth}>
+      <NhostApolloProvider auth={auth} gqlEndpoint={process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT}>
+        <GlobalStyles />
+        <Component {...pageProps} />
+      </NhostApolloProvider>
+    </NhostAuthProvider>
   )
 }
 
