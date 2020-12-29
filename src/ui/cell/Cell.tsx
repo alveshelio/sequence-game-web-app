@@ -1,5 +1,5 @@
 import { Position } from '@appTypes/types'
-import { Chip } from 'uiKit'
+import { Chip } from 'ui'
 import Image from 'next/image'
 import React from 'react'
 import { styled } from 'twin.macro'

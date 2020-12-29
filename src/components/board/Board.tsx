@@ -1,5 +1,5 @@
 import { Position } from '@appTypes/types'
-import { Cell } from 'uiKit'
+import { Cell } from 'ui'
 import React from 'react'
 import { styled } from 'twin.macro'
 import { board } from './data/gameData'

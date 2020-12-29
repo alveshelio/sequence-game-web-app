@@ -2,7 +2,7 @@ import { Team, TeamColor } from '@appTypes/types'
 import Players from '@components/player/Players'
 import React from 'react'
 import tw, { styled } from 'twin.macro'
-import { Button } from 'uiKit'
+import { Button } from 'ui'
 
 interface TeamProps {
   team: Team

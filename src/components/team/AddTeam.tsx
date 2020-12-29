@@ -1,5 +1,5 @@
 import { TeamColor } from '@appTypes/types'
-import { TeamChip } from '@uiKit/*'
+import { TeamChip } from '../../ui'
 import React from 'react'
 import { Button } from 'reakit'
 

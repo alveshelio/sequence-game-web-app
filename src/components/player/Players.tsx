@@ -1,4 +1,4 @@
-import { InputGroup } from '@uiKit/*'
+import { InputGroup } from '../../ui'
 import React, { ChangeEvent, useState } from 'react'
 
 interface PlayersProps {

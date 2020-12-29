@@ -1,5 +1,5 @@
 import Teams from '@components/team/Teams'
-import { Button } from '@uiKit/*'
+import { Button } from '../../ui'
 import React from 'react'
 
 const CreateNewGame: React.FC = () => {
