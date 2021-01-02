@@ -39,3 +39,4 @@ yarn-error.log*
 
 # Graphql
 .graphqlconfig
+schema.graphql
