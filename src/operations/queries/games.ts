@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const FIND_ACTIVE_GAMES = gql`
   query FindActiveGames {
     games(where: { in_progress: { _eq: true } }) {
+      id
       teams {
         id
         color
@@ -19,10 +20,17 @@ export const FIND_ACTIVE_GAMES = gql`
   }
 `
 
+/*
+  Header to be passed to useQuery
+  x-hasura-role: me
+  x-hasura-user-id: userId
+ */
+
 export const FIND_PAST_GAMES = gql`
-  query FindPastGames($startedAt: timestamptz!) {
+  query FindPastGames($endedAt: timestamptz!) {
     games(
-      where: { _and: [{ in_progress: { _eq: false } }, { started_at: { _lte: $startedAt } }] }
+      where: { _and: [{ in_progress: { _eq: false } }, { ended_at: { _lte: $endedAt } }] }
+      order_by: { ended_at: asc }
     ) {
       id
       winner {
@@ -48,15 +56,17 @@ export const FIND_PAST_GAMES = gql`
 
 /*
 {
-  "startedAt": "2021-01-03T20:24:40.536898+00:00"
+  Header to be passed to useQuery
+  x-hasura-role: me
+  x-hasura-user-id: userId
+  variables:
+    "endedAt": "2021-01-03T20:24:40.536898+00:00"
 }
 */
 
-export const FIND_FUTURE_GAMES = gql`
-  query FindFutureGames($startedAt: timestamptz!) {
-    games(
-      where: { _and: [{ in_progress: { _eq: false } }, { started_at: { _gte: $startedAt } }] }
-    ) {
+export const FIND_USER_FUTURE_GAMES = gql`
+  query FindFutureGames {
+    games(where: { _and: [{ in_progress: { _eq: false } }, { started_at: { _is_null: true } }] }) {
       id
       teams {
         id
@@ -73,9 +83,8 @@ export const FIND_FUTURE_GAMES = gql`
     }
   }
 `
-
 /*
-{
-  "startedAt": "2021-01-03T20:24:40.536898+00:00"
-}
-*/
+  Header to be passed to useQuery
+  x-hasura-role: me
+  x-hasura-user-id: userId
+ */

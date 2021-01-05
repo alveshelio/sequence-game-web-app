@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export const CREATE_GAME = gql`
   mutation CreateGame($teams: [teams_insert_input!]!) {
     insert_games_one(object: { teams: { data: $teams } }) {
+      id
       teams {
         name
         color
@@ -26,9 +27,16 @@ export const CREATE_GAME = gql`
       "color": "Red",
       "players": {
         "data": [
+        // When a new player
           {
-            "player_id": "9ee722dd-796c-4284-a664-b19aa3c37bc5"
+            "player": {
+              "data": {
+                "name": "Helio2",
+                "email": "helios25+2@gmail.com"
+              }
+            }
           },
+          // When an existing player
           {
             "player_id": "6b5e911d-37cb-49f0-be6f-8cd95ae8f025"
           }
