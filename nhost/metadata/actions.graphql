@@ -1,0 +1,14 @@
+type Mutation {
+  UpdateUser (
+    id: uuid!
+  ): UpdateUserOutput
+}
+
+
+
+
+type UpdateUserOutput {
+  display_name : String
+  id : uuid
+}
+

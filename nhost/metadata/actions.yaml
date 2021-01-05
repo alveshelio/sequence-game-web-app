@@ -1,0 +1,14 @@
+actions:
+- name: UpdateUser
+  definition:
+    kind: synchronous
+    handler: http://host.docker.internal:3000
+    forward_client_headers: true
+  permissions:
+  - role: me
+custom_types:
+  enums: []
+  input_objects: []
+  objects:
+  - name: UpdateUserOutput
+  scalars: []

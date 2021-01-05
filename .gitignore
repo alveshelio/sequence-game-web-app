@@ -40,3 +40,5 @@ yarn-error.log*
 # Graphql
 .graphqlconfig
 schema.graphql
+.nhost
+api/node_modules
