@@ -1,4 +1,4 @@
-import { Position } from '@appTypes/types'
+import { Position } from 'models/board'
 import { Chip } from 'ui'
 import Image from 'next/image'
 import React from 'react'

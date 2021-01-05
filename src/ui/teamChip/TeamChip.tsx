@@ -1,6 +1,6 @@
 import React from 'react'
 import tw, { styled } from 'twin.macro'
-import { TeamColor } from '@appTypes/types'
+import { TeamColor } from 'models/team'
 
 interface ChipProps {
   color: TeamColor

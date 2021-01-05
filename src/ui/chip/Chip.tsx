@@ -1,6 +1,6 @@
 import React from 'react'
 import tw, { styled } from 'twin.macro'
-import { Team } from '@appTypes/types'
+import { Team } from 'models/team'
 
 interface ChipProps {
   team: Team

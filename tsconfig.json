@@ -21,7 +21,7 @@
     "paths": {
       "@components/*": ["components/*"],
       "@uiKit/*": ["uiKit/index.tsx"],
-      "@appTypes/*": ["types/*"],
+      "@models/*": ["models/*"],
       "@context/*": ["context/*"],
       "@actions/*": ["context/actions/*"],
       "@reducers/*": ["context/reducers/*"],
