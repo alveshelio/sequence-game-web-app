@@ -1,4 +1,4 @@
-import { Position } from '@appTypes/types'
+import { Position } from 'models/board'
 import { Cell } from 'ui'
 import React from 'react'
 import { styled } from 'twin.macro'
