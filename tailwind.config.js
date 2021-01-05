@@ -101,8 +101,8 @@ module.exports = {
       contain: 'contain',
     },
     borderColor: (theme) => ({
-      ...theme('colors'),
       DEFAULT: theme('colors.gray.200', 'currentColor'),
+      ...theme('colors'),
     }),
     borderOpacity: (theme) => theme('opacity'),
     borderRadius: {
