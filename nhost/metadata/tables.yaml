@@ -195,51 +195,6 @@
 - table:
     schema: public
     name: friends
-  object_relationships:
-  - name: addressee
-    using:
-      foreign_key_constraint_on: addressee_id
-  - name: requester
-    using:
-      foreign_key_constraint_on: requester_id
-  insert_permissions:
-  - role: me
-    permission:
-      check: {}
-      columns:
-      - requester_id
-      - addressee_id
-      backend_only: false
-  - role: user
-    permission:
-      check: {}
-      columns:
-      - addressee_id
-      - requester_id
-      backend_only: false
-  select_permissions:
-  - role: me
-    permission:
-      columns:
-      - addressee_id
-      - requester_id
-      filter: {}
-  - role: user
-    permission:
-      columns:
-      - addressee_id
-      - requester_id
-      filter: {}
-  update_permissions:
-  - role: me
-    permission:
-      columns:
-      - addressee_id
-      - requester_id
-      filter:
-        requester_id:
-          _eq: X-Hasura-User-Id
-      check: {}
 - table:
     schema: public
     name: games
@@ -351,25 +306,7 @@
 - table:
     schema: public
     name: players
-  object_relationships:
-  - name: user
-    using:
-      foreign_key_constraint_on: user_id
   array_relationships:
-  - name: addressees
-    using:
-      foreign_key_constraint_on:
-        column: addressee_id
-        table:
-          schema: public
-          name: friends
-  - name: requesters
-    using:
-      foreign_key_constraint_on:
-        column: requester_id
-        table:
-          schema: public
-          name: friends
   - name: teams
     using:
       foreign_key_constraint_on:
@@ -383,54 +320,39 @@
       check: {}
       columns:
       - id
-      - user_id
       - email
-      - name
       backend_only: false
   - role: user
     permission:
       check: {}
       columns:
       - email
-      - name
       - id
-      - user_id
       backend_only: false
   select_permissions:
   - role: me
     permission:
       columns:
       - email
-      - name
       - id
-      - user_id
       filter: {}
   - role: user
     permission:
       columns:
       - email
-      - name
       - id
-      - user_id
       filter: {}
-  update_permissions:
-  - role: me
-    permission:
-      columns:
-      - id
-      - user_id
-      - email
-      - name
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
-      check: null
-  delete_permissions:
-  - role: me
-    permission:
-      filter:
-        user_id:
-          _eq: X-Hasura-User-Id
+  event_triggers:
+  - name: link-player-to-user
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook: '{{NHOST_CUSTOM_API_ENDPOINT}}/link-player-to-user'
 - table:
     schema: public
     name: team_players
@@ -441,6 +363,14 @@
   - name: team
     using:
       foreign_key_constraint_on: team_id
+  - name: user
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: users
+        column_mapping:
+          player_id: player_id
   insert_permissions:
   - role: me
     permission:
@@ -469,20 +399,6 @@
       - player_id
       - team_id
       filter: {}
-  update_permissions:
-  - role: me
-    permission:
-      columns:
-      - player_id
-      - team_id
-      filter:
-        player:
-          user_id:
-            _eq: X-Hasura-User-Id
-      check:
-        player:
-          user_id:
-            _eq: X-Hasura-User-Id
 - table:
     schema: public
     name: teams
@@ -545,25 +461,6 @@
       - game_id
       - id
       filter: {}
-  update_permissions:
-  - role: me
-    permission:
-      columns:
-      - color
-      - name
-      - created_at
-      - game_id
-      - id
-      filter:
-        players:
-          player:
-            user_id:
-              _eq: X-Hasura-User-Id
-      check:
-        players:
-          player:
-            user_id:
-              _eq: X-Hasura-User-Id
 - table:
     schema: public
     name: users
@@ -576,14 +473,14 @@
           name: accounts
         column_mapping:
           id: user_id
-  array_relationships:
-  - name: players
+  - name: player
     using:
-      foreign_key_constraint_on:
-        column: user_id
-        table:
+      manual_configuration:
+        remote_table:
           schema: public
           name: players
+        column_mapping:
+          player_id: id
   insert_permissions:
   - role: me
     permission:
@@ -609,11 +506,12 @@
   - role: me
     permission:
       columns:
-      - avatar_url
-      - display_name
+      - id
       - created_at
       - updated_at
-      - id
+      - display_name
+      - avatar_url
+      - player_id
       filter: {}
   - role: user
     permission:
@@ -623,6 +521,7 @@
       - created_at
       - updated_at
       - id
+      - player_id
       filter: {}
   update_permissions:
   - role: me
