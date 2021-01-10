@@ -14,12 +14,14 @@ export const FIND_PLAYERS_BY_EMAIL = gql`
 }
 */
 
-export const FIND_PLAYER_BY_EMAIL = gql`
-  query FindUsersByEmail($email: String!) {
-    players(where: { email: { _eq: $email } }) {
+export const FIND_USER_OR_PLAYER_BY_EMAIL = gql`
+  query FindUserOrPlayerByEmail($userEmail: citext!, $playerEmail: String!) {
+    users(where: { account: { email: { _eq: $userEmail } } }) {
+      player_id
+      display_name
+    }
+    players(where: { email: { _eq: $playerEmail } }) {
       id
-      name
-      email
     }
   }
 `
