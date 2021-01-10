@@ -53,7 +53,7 @@ const FIND_USER_BY_EMAIL = gql`
   }
 `
 
-sgMail.setApiKey('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')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
 export default async (req: Request, res: Response): Promise<void> => {
   const game = req.body.event.data.new
 
@@ -64,9 +64,7 @@ export default async (req: Request, res: Response): Promise<void> => {
   })
 
   const { games_by_pk } = await client.request(FIND_GAME_BY_ID, { gameId: game.id })
-  console.warn('games_by_pk', games_by_pk.owner)
   const { users } = await client.request(FIND_USER_BY_EMAIL, { email: games_by_pk.owner.email })
-  console.warn('users', users)
 
   const msg: Message = {
     from: 'Helio <helios25@gmail.com>',
@@ -96,13 +94,16 @@ export default async (req: Request, res: Response): Promise<void> => {
 
   const notifyUsers = (currentGame: Game): void => {
     currentGame.teams.forEach((team) => {
-      team.players.forEach((teamPlayers) => {
+      team.players.forEach(async (teamPlayers) => {
         const message = createMessage({
           to: teamPlayers.player.email,
           owner: users[0].display_name,
           gameId: game.id,
         })
-        console.warn('sending message', JSON.stringify(message, null, 2))
+        console.warn(message)
+
+        //TODO send email when ready to start ending emails
+        // await sgMail.send(message)
       })
     })
   }
