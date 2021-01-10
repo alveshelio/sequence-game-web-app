@@ -10,6 +10,10 @@ interface FriendProps {
 }
 
 export default function Friend({ player, teamColor, addPlayer }: FriendProps): React.ReactElement {
+  const handleAddPlayer = (): void => {
+    addPlayer({ playerId: player.id, teamColor, email: player.email })
+  }
+
   return (
     <div>
       <div>
@@ -17,9 +21,7 @@ export default function Friend({ player, teamColor, addPlayer }: FriendProps): R
         <div>{player.email}</div>
       </div>
       <div>
-        <Button onClick={() => addPlayer({ player: { player_id: player.id }, teamColor })}>
-          Add player to {teamColor} team
-        </Button>
+        <Button onClick={handleAddPlayer}>Add player</Button>
       </div>
     </div>
   )
