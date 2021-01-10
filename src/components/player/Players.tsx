@@ -1,73 +1,78 @@
 import { useLazyQuery } from '@apollo/client'
-import { Player, PlayerInput } from '@models/player'
-import { Team, TeamColor } from '@models/team'
+import { AddPlayerToTeam, RemovePlayerFromTeam, TeamPlayers } from '@models/player'
+import { Team } from '@models/team'
+import { FIND_USER_OR_PLAYER_BY_EMAIL } from 'operations/queries/players'
+import React, { ChangeEvent, useState } from 'react'
 import { Button } from 'reakit/Button'
 import { Input } from 'reakit/Input'
-import React, { ChangeEvent, useState } from 'react'
-import { FIND_PLAYER_BY_EMAIL } from '../../operations/queries/players'
 
 interface PlayersProps {
   team: Team
-  removePlayerFromTeam: ({
-    playerIndex,
-    teamColor,
-  }: {
-    playerIndex: number
-    teamColor: TeamColor
-  }) => void
-  addPlayerToTeam: ({ player, teamColor }: { player: Player; teamColor: TeamColor }) => void
+  teamPlayers: TeamPlayers
+  removePlayerFromTeam: RemovePlayerFromTeam
+  addPlayerToTeam: AddPlayerToTeam
 }
 const Players: React.FC<PlayersProps> = ({
   team,
+  teamPlayers,
   removePlayerFromTeam,
   addPlayerToTeam,
 }: PlayersProps) => {
-  const [player, setPlayer] = useState<PlayerInput>({
-    name: '',
-    email: '',
-  })
+  const [email, setEmail] = useState('')
 
-  const [players, setPlayers] = useState<PlayerInput[]>([])
-
-  const [findUserByEmail] = useLazyQuery(FIND_PLAYER_BY_EMAIL, {
+  /*
+    When adding a player to a team, we'll check if the player has been associated with a user
+    by checking if `player_id` in user has been set
+    If not we check if there's already a player with this email address, if so we'll grab the id
+    Lastly, if no user associated with a player nor a player is found, then we create a new player
+   */
+  const [findUserOrPlayerByEmail] = useLazyQuery(FIND_USER_OR_PLAYER_BY_EMAIL, {
     fetchPolicy: 'network-only',
+    context: {
+      headers: {
+        'x-hasura-role': 'me',
+      },
+    },
     onCompleted: (data) => {
-      if (data.players.length) {
+      if (data.users.length && data.users[0].player_id !== null) {
         addPlayerToTeam({
-          player: { player_id: data.players[0].id as string },
+          email,
           teamColor: team.color,
+          playerId: data.users[0].player_id,
+        })
+      } else if (data.players.length) {
+        addPlayerToTeam({
+          email,
+          teamColor: team.color,
+          playerId: data.players[0].id,
         })
       } else {
-        addPlayerToTeam({ player: { player: { data: player } }, teamColor: team.color })
+        addPlayerToTeam({ email, teamColor: team.color })
       }
-      setPlayer({ name: '', email: '' })
+      setEmail('')
     },
   })
 
-  const onPlayerNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const name = e.currentTarget.value
-    setPlayer((prevPlayer) => ({ ...prevPlayer, name }))
-  }
-
-  const onPlayerEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const email = e.currentTarget.value
-    setPlayer((prevPlayer) => ({ ...prevPlayer, email }))
+    setEmail(email)
   }
 
-  const handleAddPlayer = () => {
-    findUserByEmail({ variables: { email: player.email } })
-    setPlayers((prevPlayers) => [...prevPlayers, player])
+  const handleAddPlayer = (): void => {
+    findUserOrPlayerByEmail({ variables: { userEmail: email, playerEmail: email } })
   }
 
   return (
-    <div className="border border-gray-500 shadow-md px-2 py-2">
-      {players.length > 0 && <h3>Players</h3>}
+    <div className="border border-gray-500 shadow-md px-2 py-2 w-full">
+      {teamPlayers[team.color].players.length > 0 && <h3>Players</h3>}
       <ul>
-        {players.map((p, pIndex) => (
+        {teamPlayers[team.color].players.map((email, pIndex) => (
           <li key={pIndex}>
-            {p.name} {p.email}{' '}
+            {email}{' '}
             <Button
-              onClick={() => removePlayerFromTeam({ playerIndex: pIndex, teamColor: team.color })}
+              onClick={() =>
+                removePlayerFromTeam({ playerIndex: pIndex, teamColor: team.color, email })
+              }
             >
               Remove Player
             </Button>
@@ -76,22 +81,14 @@ const Players: React.FC<PlayersProps> = ({
       </ul>
       <div className="flex justify-between">
         <Input
-          className="w-1/4 border border-gray-500 px-2 py-1"
-          type="text"
-          onChange={onPlayerNameChange}
-          value={player.name}
-          placeholder="Player Name"
-        />
-
-        <Input
           className="w-2/4 border border-gray-500  px-2 py-1"
           type="text"
-          onChange={onPlayerEmailChange}
-          value={player.email}
+          onChange={handleEmailChange}
+          value={email}
           placeholder="Player Email"
         />
         <Button
-          disabled={player.name.length === 0 && player.email.length === 0}
+          disabled={email.length === 0}
           className="border border-blue-500 bg-blue-600 text-gray-50 px-2 py-1 disabled:opacity-50"
           onClick={handleAddPlayer}
         >
