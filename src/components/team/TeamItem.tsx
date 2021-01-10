@@ -9,7 +9,7 @@ interface TeamProps {
 
 const TeamItem: React.FC<TeamProps> = ({ team, removeTeam }: TeamProps) => {
   return (
-    <div className="grid justify-center">
+    <div className="grid justify-center w-full">
       <h2 className="text-xl">Team: {team.color}</h2>
       <div className="mb-4">
         <Button onClick={() => removeTeam(team.color)}>Remove Team</Button>
