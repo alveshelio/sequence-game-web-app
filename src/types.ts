@@ -1,4 +1,2 @@
-export const isOfType = <T>(
-  varToBeChecked: any,
-  propertyToCheckFor: keyof T
-): varToBeChecked is T => (varToBeChecked as T)[propertyToCheckFor] !== undefined
+export const isOfType = <T>(varToBeChecked: any, propertyToCheckFor: string): varToBeChecked is T =>
+  (varToBeChecked as T)[propertyToCheckFor] !== undefined

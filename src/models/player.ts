@@ -1,17 +1,16 @@
 import { TeamColor } from '@models/team'
 
-export interface ExistingPlayer extends PlayerInput {
-  id
-}
-
-export interface PlayerInput {
+export interface ExistingPlayer {
+  id: string
   name: string
   email: string
 }
 
 export interface PlayersDataPlayerInput {
   player: {
-    data: PlayerInput
+    data: {
+      email: string
+    }
   }
 }
 
@@ -21,11 +20,35 @@ export interface PlayersDataPlayerId {
 
 export type Player = PlayersDataPlayerInput | PlayersDataPlayerId
 
+export type PlayerInput = { playerId: string } | { email: string }
+
 interface AddPlayerToTeamProps {
-  player: Player
+  email: string
   teamColor: TeamColor
+  playerId?: string
 }
 
 export interface AddPlayerToTeam {
-  ({ player, teamColor }: AddPlayerToTeamProps): void
+  ({ email, teamColor, playerId }: AddPlayerToTeamProps): void
+}
+
+export interface RemovePlayerFromTeamProps {
+  email: string
+  teamColor: TeamColor
+  playerIndex: number
+}
+export interface RemovePlayerFromTeam {
+  ({ email, teamColor, playerIndex }: RemovePlayerFromTeamProps): void
+}
+
+export interface TeamPlayers {
+  Red: {
+    players: string[]
+  }
+  Blue: {
+    players: string[]
+  }
+  Green: {
+    players: string[]
+  }
 }
