@@ -195,10 +195,20 @@
 - table:
     schema: public
     name: friends
+  object_relationships:
+  - name: addressee
+    using:
+      foreign_key_constraint_on: addressee_id
+  - name: requester
+    using:
+      foreign_key_constraint_on: requester_id
 - table:
     schema: public
     name: games
   object_relationships:
+  - name: owner
+    using:
+      foreign_key_constraint_on: owner_id
   - name: winner
     using:
       foreign_key_constraint_on: winner_id
@@ -303,10 +313,28 @@
             player_id:
               _eq: X-Hasura-User-Id
       check: {}
+  event_triggers:
+  - name: notify-users
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook: '{{NHOST_CUSTOM_API_URL}}/notify-users'
 - table:
     schema: public
     name: players
   array_relationships:
+  - name: games
+    using:
+      foreign_key_constraint_on:
+        column: owner_id
+        table:
+          schema: public
+          name: games
   - name: teams
     using:
       foreign_key_constraint_on:
@@ -352,7 +380,7 @@
       num_retries: 0
       interval_sec: 10
       timeout_sec: 60
-    webhook: '{{NHOST_CUSTOM_API_ENDPOINT}}/link-player-to-user'
+    webhook: '{{NHOST_CUSTOM_API_URL}}/players/link-to-user'
 - table:
     schema: public
     name: team_players
@@ -473,14 +501,21 @@
           name: accounts
         column_mapping:
           id: user_id
-  - name: player
+  array_relationships:
+  - name: addressees
     using:
-      manual_configuration:
-        remote_table:
+      foreign_key_constraint_on:
+        column: addressee_id
+        table:
           schema: public
-          name: players
-        column_mapping:
-          player_id: id
+          name: friends
+  - name: requesters
+    using:
+      foreign_key_constraint_on:
+        column: requester_id
+        table:
+          schema: public
+          name: friends
   insert_permissions:
   - role: me
     permission:
@@ -527,11 +562,12 @@
   - role: me
     permission:
       columns:
-      - avatar_url
-      - display_name
+      - id
       - created_at
       - updated_at
-      - id
+      - display_name
+      - avatar_url
+      - player_id
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -544,10 +580,11 @@
     permission:
       columns:
       - avatar_url
-      - display_name
       - created_at
-      - updated_at
+      - display_name
       - id
+      - player_id
+      - updated_at
       filter:
         id:
           _eq: X-Hasura-User-Id
@@ -562,3 +599,14 @@
       filter:
         id:
           _eq: X-Hasura-User-Id
+  event_triggers:
+  - name: link-user-to-player
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook: '{{NHOST_CUSTOM_API_URL}}/users/link-to-player'
