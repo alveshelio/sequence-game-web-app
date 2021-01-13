@@ -1,0 +1,2 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE "public"."plays"("id" uuid NOT NULL DEFAULT gen_random_uuid(), "created_at" timestamptz NOT NULL DEFAULT now(), "play" json NOT NULL, "game_id" uuid NOT NULL, "player_id" uuid NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("player_id") REFERENCES "public"."players"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON UPDATE restrict ON DELETE restrict);
