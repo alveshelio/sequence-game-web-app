@@ -11,7 +11,6 @@ export const FIND_ACTIVE_GAMES = gql`
         players {
           player {
             id
-            name
             email
           }
         }
@@ -45,7 +44,6 @@ export const FIND_PAST_GAMES = gql`
         players {
           player {
             id
-            name
             email
           }
         }
@@ -75,7 +73,6 @@ export const FIND_USER_FUTURE_GAMES = gql`
         players {
           player {
             id
-            name
             email
           }
         }
