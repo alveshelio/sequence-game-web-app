@@ -2,7 +2,9 @@ import { Position } from 'models/board'
 import { Cell } from 'ui'
 import React from 'react'
 import { styled } from 'twin.macro'
+import { GET_CARDS } from 'operations/queries/board'
 import { board } from './data/gameData'
+import { useQuery } from '@apollo/client'
 
 const BoardContainer = styled.div`
   display: grid;
@@ -16,11 +18,27 @@ const BoardContainer = styled.div`
 const Board = (): React.ReactElement => {
   let x = 0
   let y = 0
+  const { data: boardData, loading, error } = useQuery(GET_CARDS, {
+    context: {
+      headers: {
+        'x-hasura-role': 'user',
+      },
+    },
+  })
+  console.warn('data', boardData)
+
+  if (loading) {
+    return <p>loading</p>
+  }
+
+  if (error) {
+    return <p>There was an error: {error.message}</p>
+  }
 
   return (
     <BoardContainer>
       {board.flat().map((card, cardIndex) => {
-        const position: Position = [y, x]
+        const position: Position = { y, x }
         x++
         if (x > 9) {
           x = 0
