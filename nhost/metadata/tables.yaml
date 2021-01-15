@@ -194,6 +194,32 @@
           name: accounts
 - table:
     schema: public
+    name: cards
+  array_relationships:
+  - name: plays
+    using:
+      foreign_key_constraint_on:
+        column: card_id
+        table:
+          schema: public
+          name: plays
+  select_permissions:
+  - role: me
+    permission:
+      columns:
+      - position
+      - name
+      - id
+      filter: {}
+  - role: user
+    permission:
+      columns:
+      - position
+      - name
+      - id
+      filter: {}
+- table:
+    schema: public
     name: friends
   object_relationships:
   - name: addressee
@@ -213,6 +239,13 @@
     using:
       foreign_key_constraint_on: winner_id
   array_relationships:
+  - name: plays
+    using:
+      foreign_key_constraint_on:
+        column: game_id
+        table:
+          schema: public
+          name: plays
   - name: teams
     using:
       foreign_key_constraint_on:
@@ -327,6 +360,15 @@
 - table:
     schema: public
     name: players
+  object_relationships:
+  - name: user
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: users
+        column_mapping:
+          id: player_id
   array_relationships:
   - name: games
     using:
@@ -335,6 +377,13 @@
         table:
           schema: public
           name: games
+  - name: plays
+    using:
+      foreign_key_constraint_on:
+        column: player_id
+        table:
+          schema: public
+          name: plays
   - name: teams
     using:
       foreign_key_constraint_on:
@@ -370,6 +419,16 @@
       - email
       - id
       filter: {}
+  update_permissions:
+  - role: me
+    permission:
+      columns:
+      - email
+      filter:
+        user:
+          id:
+            _eq: X-Hasura-User-Id
+      check: null
   event_triggers:
   - name: link-player-to-user
     definition:
@@ -381,6 +440,76 @@
       interval_sec: 10
       timeout_sec: 60
     webhook: '{{NHOST_CUSTOM_API_URL}}/players/link-to-user'
+- table:
+    schema: public
+    name: plays
+  object_relationships:
+  - name: plays_card
+    using:
+      foreign_key_constraint_on: card_id
+  - name: plays_game
+    using:
+      foreign_key_constraint_on: game_id
+  - name: plays_player
+    using:
+      foreign_key_constraint_on: player_id
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        plays_player:
+          teams:
+            user:
+              id:
+                _in: X-Hasura-Allowed-Ids
+      columns:
+      - id
+      - created_at
+      - position
+      - game_id
+      - player_id
+      - card_id
+      backend_only: false
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - position
+      - created_at
+      - card_id
+      - game_id
+      - id
+      - player_id
+      filter:
+        plays_player:
+          teams:
+            user:
+              id:
+                _in: X-Hasura-Allowed-Ids
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - position
+      - created_at
+      - card_id
+      - game_id
+      - id
+      - player_id
+      filter:
+        plays_player:
+          teams:
+            user:
+              id:
+                _in: X-Hasura-Allowed-Ids
+      check: null
+  delete_permissions:
+  - role: me
+    permission:
+      filter: {}
+  - role: user
+    permission:
+      filter: {}
 - table:
     schema: public
     name: team_players
@@ -489,6 +618,35 @@
       - game_id
       - id
       filter: {}
+  update_permissions:
+  - role: me
+    permission:
+      columns:
+      - id
+      - created_at
+      - name
+      - color
+      - game_id
+      filter:
+        players:
+          user:
+            id:
+              _in: X-Hasura-Allowed-Ids
+      check: {}
+  - role: user
+    permission:
+      columns:
+      - color
+      - name
+      - created_at
+      - game_id
+      - id
+      filter:
+        players:
+          user:
+            id:
+              _in: X-Hasura-Allowed-Ids
+      check: null
 - table:
     schema: public
     name: users
