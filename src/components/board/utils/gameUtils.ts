@@ -1,3 +1,4 @@
+import { Board } from '@models/board'
 import { Cards, CardSymbols } from '../data/gameData'
 
 const shuffleDeck = (deck: string[]): string[] => {
@@ -43,4 +44,8 @@ export const rotateMatrix = (matrix: string[][]): string[][] => {
     }
   }
   return matrix
+}
+
+export const isDeadCard = (cardName: string, board: Board): boolean => {
+  return board.every((row) => row.every((item) => item.card === cardName && item.played))
 }
